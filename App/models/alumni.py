@@ -15,7 +15,9 @@ class Alumni(User):
     listing = db.relationship('Listing', secondary='alumni_listings', back_populates='applicant')
 
     # relationship to listings to receive notifications?
-    subscribed = db.Column(db.Boolean, default=False)
+    #subscribed = db.Column(db.Boolean, default=False)
+
+    
 
     # need to add in columns for:
     # -contact info i.e phone number
@@ -24,6 +26,17 @@ class Alumni(User):
     #name
     firstname = db.Column(db.String(120), nullable = False)
     lastname = db.Column(db.String(120), nullable = False)
+
+    # skills
+    skills = db.Column(db.String(120), nullable= True)
+
+    # experience
+    experience = db.Column(db.String(1200), nullable=False)
+
+    # natonality
+    nationality = db.Column(db.string(120), nullable= False)
+
+
 
     # categories = ['Software Engineering', 'Database', 'Programming', 'N/A']
     job_category = db.Column(db.String(120))

@@ -9,11 +9,13 @@ class User(db.Model):
     username =  db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String, nullable=False, unique = True)
+    role = db.Column(db.String(120), nullable=False)
+
 
     def __init__(self, username, password, email):
         self.username = username
         self.set_password(password)
-        self.email = email
+        # self.email = email
 
     def get_json(self):
         return{
