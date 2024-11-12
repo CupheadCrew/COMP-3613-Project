@@ -6,11 +6,13 @@ def add_alumni(username, password, email, alumni_id, contact, firstname, lastnam
 
         # Check if there are no other users with the same username or email values in any other subclass
         if (
+            # Alumni.query.filter_by(username=username).first() is not None or
             Admin.query.filter_by(username=username).first() is not None or
             Company.query.filter_by(username=username).first() is not None or
 
             Company.query.filter_by(email=email).first() is not None or
             Admin.query.filter_by(email=email).first() is not None
+            # Alumni.query.filter_by(email=email).first() is not None
             
         ):
             return None  # Return None to indicate duplicates
@@ -60,6 +62,7 @@ def subscribe(alumni_id, job_category=None):
     alumni.subscribed = True
 
     if job_category is not None:
+        # add_categories(alumni_id, job_category)
         alumni.add_category(job_category)
 
     db.session.add(alumni)
@@ -70,6 +73,7 @@ def unsubscribe(alumni_id):
     alumni = get_alumni(alumni_id)
 
     if not alumni:
+        # print('nah')
         return None
 
     alumni.subscribed = False
@@ -79,12 +83,41 @@ def unsubscribe(alumni_id):
     db.session.commit()
     return alumni
 
+    
+
+
+
+# def subscribe_action(alumni_id, job_category=None):
+#     alumni = get_alumni(alumni_id)
+
+#     if not alumni:
+#         # print('nah')
+#         return None
+    
+#     # if they are already susbcribed then unsubscribe them
+#     if is_alumni_subscribed(alumni_id):
+#         alumni.subscribed = False
+#         remove_categories(alumni_id, alumni.get_categories())
+    
+#     else:
+#         alumni.subscribed = True
+
+#         if job_category is not None:
+#             add_categories(alumni_id, job_category)
+#         # set their jobs list to job_category ?
+
+#     db.session.add(alumni)
+#     db.session.commit()
+#     return alumni
+        
 # adding and removing job categories 
 def add_categories(alumni_id, job_categories):
     alumni = get_alumni(alumni_id)
     try:
         for category in job_categories:
+            # print(category)
             alumni.add_category(category)
+            # print(alumni.get_categories())
             db.session.commit()
         return alumni
     except:
@@ -102,6 +135,8 @@ def remove_categories(alumni_id, job_categories):
         db.session.rollback()
         return None
 
+# apply to an application
+# def apply_listing(alumni_id, listing_title):
 def apply_listing(alumni_id, listing_id):
     from App.controllers import get_listing_title, get_listing
 
@@ -109,9 +144,11 @@ def apply_listing(alumni_id, listing_id):
 
     # error check to see if alumni exists
     if alumni is None:
+        # print('is none')
         return None
 
     # get the listing and then company that made the listing
+    # listing = get_listing_title(listing_title)
     listing = get_listing(listing_id)
 
     if listing is None:
@@ -123,5 +160,7 @@ def apply_listing(alumni_id, listing_id):
 
     #commit changes to the database
     db.session.commit()
+
+    # add the alumni as an applicant to the company model object?
 
     return alumni
